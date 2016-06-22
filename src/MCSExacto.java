@@ -29,11 +29,12 @@ public class MCSExacto {
 			Grafo respuestaParcial = new Grafo(chico.getCantidadDeNodos());
 			for(int nodoDelChico=0; nodoDelChico<chico.getCantidadDeNodos();nodoDelChico++){
 				int nodoDelGrande= asignacion.get(nodoDelChico);
+				respuestaParcial.agregarNodo(nodoDelChico);
 				//este for tambien lo puedo hacer con chico.getAdyacentesANodo(nodoDelChico)
 				for(Integer ady : chico.getListaAdyacencia().get(nodoDelChico)){
 					if(grande.getListaAdyacencia().get(nodoDelGrande).contains(asignacion.get(ady))){
 						cantAristasParcial++;
-						respuestaParcial.agregarNodo(nodoDelChico);
+						
 						respuestaParcial.agregarNodo(ady);
 						respuestaParcial.agregarArista(nodoDelChico, ady);					}
 					// O
