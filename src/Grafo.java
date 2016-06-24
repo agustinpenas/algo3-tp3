@@ -2,8 +2,10 @@
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.List;
+import java.util.Queue;
 import java.util.ArrayList;
 
 public class Grafo {
@@ -71,6 +73,7 @@ public class Grafo {
 	
 	private int[][] matrizAdyacencia;
 	private int[] grados; 
+	private boolean[] visitados;
 	
 	
 	public Grafo(Integer cantidadDeNodos, Integer cantidadDeAristas,
@@ -83,6 +86,9 @@ public class Grafo {
 			this.nodos = new HashSet<Integer>(nodos);
 			this.matrizAdyacencia = matrizAdyacencia;
 			this.grados = grados;
+			for(int i =0; i<cantidadDeNodos;i++){
+				visitados[i]=false;
+			}
 			}
 
 	
@@ -94,6 +100,7 @@ public class Grafo {
 	public Grafo (int cantNodos) {
 		this.matrizAdyacencia= new int[cantNodos][cantNodos];
 		this.listaAdyacencia = new ArrayList<>(cantNodos);
+		this.visitados = new boolean[cantNodos];
 		this.nodos = new HashSet<Integer>();
 		this.aristas = new HashSet<Arista>();
 		this.grados = new int[cantNodos];
@@ -104,6 +111,9 @@ public class Grafo {
 			for (int j = 0; j < cantNodos; j++) {
 				matrizAdyacencia [i][j] =0;
 			}
+		}
+		for(int i =0; i<cantNodos;i++){
+			visitados[i]=false;
 		}
 		this.cantidadDeAristas=0;
 		this.cantidadDeNodos=0;
@@ -305,6 +315,66 @@ public class Grafo {
 		if (this.matrizAdyacencia[nodoU][nodoV] ==1) return true;
 		
 		return false; 
+	}
+	
+	public Set<Integer> getComponenteConexaDeNodo(int nodo){
+		// BFS uses Queue data structure
+		Queue<Integer> queue = new LinkedList<Integer>();
+		queue.add(nodo);
+		Set<Integer> componente = new HashSet<Integer>();
+		while(!queue.isEmpty()) {
+			Integer node = queue.remove();
+			Integer child=null;
+			while((child=this.getUnvisitedAdyNode(node))!=null) {
+				this.visitados[child]=true;
+				componente.add(child);
+				queue.add(child);
+			}
+		}
+		// Clear visited property of nodes
+		return componente;
+	}
+	
+	/*public CoTree getCoTree(){
+		return armarCoTree(this, this.getNodos(), this.cantidadDeNodos);
+	}
+	
+	private static CoTree armarCoTree(Grafo g, Set<Integer> nodos, int cantNodos){
+		Grafo subGrafo = new Grafo(cantNodos);
+		
+		for(Integer nodo: nodos){
+			subGrafo.agregarNodo(nodo);
+		}
+		
+		for(Integer nodo: nodos){
+			for(Integer ady:g.getListaAdyacencia().get(nodo)){
+				if(nodos.contains(ady)){
+					subGrafo.agregarArista(nodo, ady);
+				}
+			}
+		}
+		
+		Integer nodo = nodos.iterator().next();
+		
+	//Obtengo una componente conexa del subgrafo
+		
+		Set<Integer> componente = subGrafo.getComponenteConexaDeNodo(nodo); 
+		Set<Integer> otraComponente = new HashSet<Integer>();
+		
+		CoTree componente1 = armarCoTree(g,componente,cantNodos);
+		CoTree componente2 = armarCoTree(g,otraComponente,cantNodos);
+		
+		
+		//CoTree respuesta = new CoTree(componente1, componente2, tipo);
+	}*/
+	
+	private Integer getUnvisitedAdyNode(int node){
+		for(Integer vecino: this.getListaAdyacencia().get(node)){
+			if(this.visitados[vecino]){
+				return vecino;
+			}
+		}
+		return null;
 	}
 	
 	public void mostrar(){

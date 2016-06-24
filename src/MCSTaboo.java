@@ -1,4 +1,3 @@
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,8 +48,8 @@ public class MCSTaboo {
 			}
 			
 			solucionActual = evaluarMejorVecino(neighborhood);
-			System.out.println(solucionActual.getAsignacion().toString());
-			System.out.println(solucionActual.getCantidadAristas());
+			System.out.println(neighborhood.size());
+			//System.out.println(solucionActual.getCantidadAristas());
 			/*** Si solucionActual es mejor que la mejorSolucionEncontrada hasta el momento. ***/
 			if (solucionActual.getCantidadAristas()>mejorSolucionEncontrada.getCantidadAristas()) {
 				mejorSolucionEncontrada = solucionActual;				
@@ -182,7 +181,7 @@ public class MCSTaboo {
 		Solucion parcial = new Solucion();
 		Integer cantAristasParcial =0;
 		for(Solucion vecino :neighborhood){
-			if(cantAristasParcial<vecino.getCantidadAristas()){
+			if(cantAristasParcial<=vecino.getCantidadAristas()){
 				cantAristasParcial=vecino.getCantidadAristas();
 				parcial = vecino;
 			}

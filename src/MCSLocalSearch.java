@@ -33,7 +33,7 @@ public class MCSLocalSearch {
 			//Agregar
 			aristasMaxAlcanzada = true;
 
-			List<Solucion> vecinos = getAsignacionesDeVecindadN(asignacionesSolucionParcial, chico,grande);
+			List<Solucion> vecinos = getAsignacionesDeVecindad2(asignacionesSolucionParcial, chico,grande);
 			
 			// Itero los nodos candidatos y veo si al agregarlo me mejora la frontera
 			for (Solucion solPosible : vecinos) {
@@ -63,6 +63,33 @@ public class MCSLocalSearch {
 				vecino = armarSolucion(asignacion, g1, g2);
 				res.add(vecino);
 				java.util.Collections.swap(asignacion, i, j);
+			}
+		}
+		return res;
+	}
+	
+	public static List<Solucion> getAsignacionesDeVecindad2(List<Integer> asignacion,Grafo g1, Grafo g2){
+		List<Solucion> res = new ArrayList<>();
+		for(int k=0; k<g1.getCantidadDeNodos();k++){
+			for(int i =k+1; i<g1.getCantidadDeNodos();i++){
+				for(int j=i+1; j<g2.getCantidadDeNodos();j++){
+					int nodo1, nodo2, nodo3;
+					nodo1 = asignacion.get(k);
+					nodo2 = asignacion.get(i);
+					nodo3 = asignacion.get(j);
+					
+					asignacion.set(k, nodo3);
+					asignacion.set(i, nodo1);
+					asignacion.set(j, nodo2);
+					
+					Solucion vecino = new Solucion();
+					vecino = armarSolucion(asignacion, g1, g2);
+					res.add(vecino);
+					
+					asignacion.set(k, nodo1);
+					asignacion.set(i, nodo2);
+					asignacion.set(j, nodo3);
+				}
 			}
 		}
 		return res;
