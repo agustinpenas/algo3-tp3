@@ -3,7 +3,7 @@ import java.util.List;
 
 public class MCSExacto {
 
-	public Grafo resolver(Grafo g1, Grafo g2){
+	public Solucion resolver(Grafo g1, Grafo g2){
 		Grafo grande;
 		Grafo chico;
 		
@@ -51,8 +51,10 @@ public class MCSExacto {
 			}
 		}
 		
-		System.out.println(cantidadAristas);
-		System.out.println(asignacionFinal.toString());
-		return respuesta;
+		Solucion fin = new Solucion();
+		fin.setAsignacion(asignacionFinal);
+		fin.setCantidadAristas(cantidadAristas);
+		fin.setGrafoSol(respuesta);
+		return fin;
 	}
 }

@@ -48,7 +48,6 @@ public class MCSTaboo {
 			}
 			
 			solucionActual = evaluarMejorVecino(neighborhood);
-			System.out.println(neighborhood.size());
 			//System.out.println(solucionActual.getCantidadAristas());
 			/*** Si solucionActual es mejor que la mejorSolucionEncontrada hasta el momento. ***/
 			if (solucionActual.getCantidadAristas()>mejorSolucionEncontrada.getCantidadAristas()) {
@@ -73,8 +72,6 @@ public class MCSTaboo {
 		result.setAsignacion(mejorSolucionEncontrada.getAsignacion());
 		result.setCantidadAristas(mejorSolucionEncontrada.getCantidadAristas());
 		result.setGrafoSol(mejorSolucionEncontrada.getGrafoSol());
-		System.out.println(mejorSolucionEncontrada.getCantidadAristas());
-		System.out.println(mejorSolucionEncontrada.getAsignacion().toString());
 		return result;			
 	}
 	

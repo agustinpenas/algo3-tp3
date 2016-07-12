@@ -318,12 +318,13 @@ public class Grafo {
 	}
 	
 	public Set<Integer> getComponenteConexaDeNodo(int nodo){
-		// BFS uses Queue data structure
+
 		Queue<Integer> queue = new LinkedList<Integer>();
 		queue.add(nodo);
 		Set<Integer> componente = new HashSet<Integer>();
 		while(!queue.isEmpty()) {
 			Integer node = queue.remove();
+			componente.add(node);
 			Integer child=null;
 			while((child=this.getUnvisitedAdyNode(node))!=null) {
 				this.visitados[child]=true;
@@ -331,16 +332,21 @@ public class Grafo {
 				queue.add(child);
 			}
 		}
-		// Clear visited property of nodes
+		for(int i=0; i<this.cantidadDeNodos;i++){
+			this.visitados[i]=false;
+		}
+
 		return componente;
 	}
 	
-	/*public CoTree getCoTree(){
+	public CoTree getCoTree(){
 		return armarCoTree(this, this.getNodos(), this.cantidadDeNodos);
 	}
 	
 	private static CoTree armarCoTree(Grafo g, Set<Integer> nodos, int cantNodos){
 		Grafo subGrafo = new Grafo(cantNodos);
+		
+
 		
 		for(Integer nodo: nodos){
 			subGrafo.agregarNodo(nodo);
@@ -355,26 +361,89 @@ public class Grafo {
 		}
 		
 		Integer nodo = nodos.iterator().next();
-		
+		if(nodos.size() == 1){
+			return new CoTree(nodo);
+		}
 	//Obtengo una componente conexa del subgrafo
 		
-		Set<Integer> componente = subGrafo.getComponenteConexaDeNodo(nodo); 
+		Set<Integer> componente = new HashSet<>(); 
 		Set<Integer> otraComponente = new HashSet<Integer>();
+		CoTree respuesta;
+		componente.addAll(subGrafo.getComponenteConexaDeNodo(nodo));
+		otraComponente.addAll(nodos);
+		otraComponente.removeAll(componente);
+		if(otraComponente.size()>0){
 		
-		CoTree componente1 = armarCoTree(g,componente,cantNodos);
-		CoTree componente2 = armarCoTree(g,otraComponente,cantNodos);
+			CoTree componente1 = armarCoTree(g,componente,cantNodos);
+			CoTree componente2 = armarCoTree(g,otraComponente,cantNodos);
+			
+			respuesta = new CoTree(componente1, componente2, CoTreeType.UNION);
 		
-		
-		//CoTree respuesta = new CoTree(componente1, componente2, tipo);
-	}*/
+		}else {
+			subGrafo.complementar();
+			componente.clear();
+			componente.addAll(subGrafo.getComponenteConexaDeNodo(nodo)); 
+			otraComponente.clear();
+			otraComponente.addAll(nodos);
+			otraComponente.removeAll(componente);
+			CoTree componente1 = armarCoTree(g,componente,cantNodos);
+			CoTree componente2 = armarCoTree(g,otraComponente,cantNodos);
+			
+			respuesta = new CoTree(componente1, componente2, CoTreeType.JOIN);
+		}
+
+		return respuesta;
+	}
 	
 	private Integer getUnvisitedAdyNode(int node){
 		for(Integer vecino: this.getListaAdyacencia().get(node)){
-			if(this.visitados[vecino]){
+			if(!this.visitados[vecino]){
 				return vecino;
 			}
 		}
 		return null;
+	}
+	
+	private void complementar(){
+		for(int i =0; i<this.cantidadDeNodos;i++){
+			for(int j=0; j<this.cantidadDeNodos;j++){
+				if(this.matrizAdyacencia[i][j]==1){
+					this.matrizAdyacencia[i][j]=0;
+				}else{
+					if(i!=j){
+						this.matrizAdyacencia[i][j]=1;
+					}
+				}
+			}
+		}
+		this.getAristas().clear();
+		this.cantidadDeAristas=0;
+		for(int i=0; i<this.cantidadDeNodos;i++){
+			this.grados[i]=0;
+			this.listaAdyacencia.get(i).clear();
+		}
+		
+		
+		for(int i=0; i<this.cantidadDeNodos; i++){
+			
+			for(int j=i+1; j<this.cantidadDeNodos;j++){
+				if(this.matrizAdyacencia[i][j]==1){
+					Arista aristaTemporal = new Arista();
+					aristaTemporal.setNroDeArista(this.cantidadDeAristas++); 
+					aristaTemporal.setNodoU(i);
+					aristaTemporal.setNodoV(j);
+		    	
+					this.aristas.add(aristaTemporal);
+			
+					// aumenta el grado de los nodos de la arista
+			    	this.grados[i]++;
+			    	this.grados[j]++;
+					
+					this.listaAdyacencia.get(i).add(j);
+					this.listaAdyacencia.get(j).add(i);
+				}
+			}
+		}
 	}
 	
 	public void mostrar(){

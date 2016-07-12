@@ -5,7 +5,7 @@ import java.util.List;
 
 public class MCSLocalSearch {
 	
-	public static Grafo resolver(Grafo g1, Grafo g2){
+	public static Solucion resolver(Grafo g1, Grafo g2){
 		
 		//List<Integer> resultado = new ArrayList<>();
 		// Linea entrada es una instancia del problema
@@ -33,7 +33,7 @@ public class MCSLocalSearch {
 			//Agregar
 			aristasMaxAlcanzada = true;
 
-			List<Solucion> vecinos = getAsignacionesDeVecindad2(asignacionesSolucionParcial, chico,grande);
+			List<Solucion> vecinos = getAsignacionesDeVecindadN(asignacionesSolucionParcial, chico,grande);
 			
 			// Itero los nodos candidatos y veo si al agregarlo me mejora la frontera
 			for (Solucion solPosible : vecinos) {
@@ -49,8 +49,11 @@ public class MCSLocalSearch {
 			
 		}
 		
-			
-		return respuesta;
+		Solucion fin = new Solucion();
+		fin.setAsignacion(asignacionesSolucionParcial);
+		fin.setCantidadAristas(cantAristas);
+		fin.setGrafoSol(respuesta);
+		return fin;
 	}
 
 

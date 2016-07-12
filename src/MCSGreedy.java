@@ -5,10 +5,13 @@ import java.util.Vector;
 
 public class MCSGreedy {
 
-	public static Grafo resolver( Grafo V/*chico*/, Grafo W/*grande*/){
+	public static Solucion resolver( Grafo V/*chico*/, Grafo W/*grande*/){
 		
 		int[] nodosV = new int[V.getCantidadDeNodos()];
 		int[] nodosW = new int[W.getCantidadDeNodos()];
+		int[] gradosV= new int[V.getCantidadDeNodos()];
+		int[] gradosW= new int[W.getCantidadDeNodos()];
+		
 		List<Integer> solucion = new ArrayList<>();
 
 		for(int i =0; i<V.getCantidadDeNodos();i++){
@@ -20,10 +23,18 @@ public class MCSGreedy {
 			solucion.add(i);
 		}
 		
+		for(int i =0; i<V.getCantidadDeNodos();i++){
+			gradosV[i]=V.getGrados()[i];
+		}
+		
+		for(int i =0; i<W.getCantidadDeNodos();i++){
+			gradosW[i]=W.getGrados()[i];
+		}
+		
 		MergeSort sorter = new MergeSort();
 		
-		sorter.sort(nodosV, V.getGrados());
-		sorter.sort(nodosW, W.getGrados());
+		sorter.sort(nodosV, gradosV);
+		sorter.sort(nodosW, gradosW);
 		
 		for(int i =0; i<nodosW.length; i++){
 			if(i>=nodosV.length){
@@ -50,7 +61,12 @@ public class MCSGreedy {
 
 		}
 		
-		return respuestaParcial;
+		
+		Solucion fin = new Solucion();
+		fin.setAsignacion(solucion);
+		fin.setCantidadAristas(cantAristasParcial);
+		fin.setGrafoSol(respuestaParcial);
+		return fin;
 	}
 	
 
